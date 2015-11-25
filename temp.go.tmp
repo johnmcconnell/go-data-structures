@@ -1,0 +1,60 @@
+package main
+
+type Container interface {
+	Len() int
+	OpenIdx() int
+	Del(int)
+	Swap(int, int)
+	Less(int, int) bool
+}
+
+type Things []int
+
+func (t *Things) Grow() {
+	(*t) = append(*t, 0)
+}
+
+func (t Things) Len() int {
+	return len(t)
+}
+
+func (t Things) OpenIdx() int {
+	return len(t)
+}
+
+func (t *Things) Del(x int) {
+	(*t) = append(
+		(*t)[:x],
+		(*t)[x+1:]...,
+	)
+}
+
+func (t Things) Swap(i, j int) {
+	t[i], t[j] = t[j], t[i]
+}
+
+func (t Things) Less(i, j int) bool {
+	return t[i] < t[j]
+}
+
+type Heap struct {
+	Things Things
+}
+
+func (H *Heap) Push(x int) {
+	Idx := H.Things.OpenIdx()
+
+	H.Things[Idx] = x
+
+	HeapPush(Idx, H.Things)
+}
+
+func (H *Heap) Pop() int {
+	Idx := HeapPop(L, H.Things)
+
+	Value := H.Things[Idx]
+
+	H.Things.Del(Idx)
+
+	return Value
+}
